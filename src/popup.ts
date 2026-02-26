@@ -6,13 +6,52 @@ const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
 
 let selectedTabs: TabInfo[] = [];
 
+// favicon URLを安全に取得する
+function getFaviconUrl(url: string): string | null {
+  try {
+    const origin = new URL(url).origin;
+    if (origin === 'null') return null;
+    return origin + '/favicon.ico';
+  } catch {
+    return null;
+  }
+}
+
+// タブ一覧の項目をDOM APIで安全に生成する
+function createTabItem(tab: TabInfo): HTMLDivElement {
+  const item = document.createElement('div');
+  item.className = 'tab-item';
+
+  const faviconUrl = getFaviconUrl(tab.url);
+  if (faviconUrl) {
+    const img = document.createElement('img');
+    img.src = faviconUrl;
+    img.alt = '';
+    img.width = 16;
+    img.height = 16;
+    img.addEventListener('error', () => { img.style.display = 'none'; });
+    item.appendChild(img);
+  }
+
+  const span = document.createElement('span');
+  span.className = 'tab-title';
+  span.textContent = tab.title;
+  item.appendChild(span);
+
+  return item;
+}
+
 // 選択中のタブ一覧を取得して表示する
 async function loadTabs(): Promise<void> {
   const response: GetSelectedTabsResponse = await chrome.runtime.sendMessage({ type: 'get-selected-tabs' });
   selectedTabs = response.tabs;
 
   if (selectedTabs.length === 0) {
-    tabListEl.innerHTML = '<div class="empty">選択中のタブがありません</div>';
+    tabListEl.textContent = '';
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = '選択中のタブがありません';
+    tabListEl.appendChild(empty);
     tabCountEl.textContent = '';
     copyBtn.disabled = true;
     return;
@@ -20,24 +59,10 @@ async function loadTabs(): Promise<void> {
 
   tabCountEl.textContent = `${selectedTabs.length}個のタブ`;
 
-  tabListEl.innerHTML = selectedTabs
-    .map(tab => {
-      const faviconUrl = new URL(tab.url).origin + '/favicon.ico';
-      return `
-        <div class="tab-item">
-          <img src="${faviconUrl}" alt="" onerror="this.style.display='none'">
-          <span class="tab-title">${escapeHtml(tab.title)}</span>
-        </div>
-      `;
-    })
-    .join('');
-}
-
-// HTMLエスケープ
-function escapeHtml(text: string): string {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  tabListEl.textContent = '';
+  for (const tab of selectedTabs) {
+    tabListEl.appendChild(createTabItem(tab));
+  }
 }
 
 // コピーボタンのクリックハンドラ
