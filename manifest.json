@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "TabStack",
+  "version": "1.0.0",
+  "description": "選択したタブをMarkdown形式でまとめてコピー",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "activeTab",
+    "offscreen"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "copy-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+C",
+        "mac": "MacCtrl+C"
+      },
+      "description": "選択したタブをMarkdown形式でコピー"
+    }
+  }
+}
