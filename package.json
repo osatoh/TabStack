@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "tsc --noEmit",
-    "watch": "node build.mjs --watch"
+    "watch": "node build.mjs --watch",
+    "zip": "npm run build && cd dist && zip -r ../tabstack.zip ."
   },
   "devDependencies": {
     "@types/chrome": "^0.0.287",

@@ -6,12 +6,12 @@ const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
 
 let selectedTabs: TabInfo[] = [];
 
-// favicon URLを安全に取得する
+// favicon URLを安全に取得する（http/httpsのみ）
 function getFaviconUrl(url: string): string | null {
   try {
-    const origin = new URL(url).origin;
-    if (origin === 'null') return null;
-    return origin + '/favicon.ico';
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return null;
+    return parsed.origin + '/favicon.ico';
   } catch {
     return null;
   }

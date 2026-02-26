@@ -3,6 +3,7 @@
   "name": "TabStack",
   "version": "1.0.0",
   "description": "選択したタブをMarkdown形式でまとめてコピー",
+  "homepage_url": "https://github.com/osatoh/TabStack",
   "permissions": [
     "tabs",
     "scripting",
