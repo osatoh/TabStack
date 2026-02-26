@@ -1,5 +1,7 @@
+import type { Message } from './types';
+
 // chrome:// ページなどでクリップボードコピーが使えない場合のフォールバック
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener((message: Message) => {
   if (message.type === 'copy-to-clipboard') {
     const textarea = document.createElement('textarea');
     textarea.value = message.text;

@@ -1,12 +1,14 @@
-const tabListEl = document.getElementById('tab-list');
-const tabCountEl = document.getElementById('tab-count');
-const copyBtn = document.getElementById('copy-btn');
+import type { TabInfo, GetSelectedTabsResponse } from './types';
 
-let selectedTabs = [];
+const tabListEl = document.getElementById('tab-list') as HTMLDivElement;
+const tabCountEl = document.getElementById('tab-count') as HTMLSpanElement;
+const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+
+let selectedTabs: TabInfo[] = [];
 
 // 選択中のタブ一覧を取得して表示する
-async function loadTabs() {
-  const response = await chrome.runtime.sendMessage({ type: 'get-selected-tabs' });
+async function loadTabs(): Promise<void> {
+  const response: GetSelectedTabsResponse = await chrome.runtime.sendMessage({ type: 'get-selected-tabs' });
   selectedTabs = response.tabs;
 
   if (selectedTabs.length === 0) {
@@ -32,7 +34,7 @@ async function loadTabs() {
 }
 
 // HTMLエスケープ
-function escapeHtml(text) {
+function escapeHtml(text: string): string {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
